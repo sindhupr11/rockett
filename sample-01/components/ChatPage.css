@@ -1,0 +1,123 @@
+/* Main container */
+.chat-page {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Header styles */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    font-size: 24px;
+  }
+  
+  .header-icons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .notification-icon {
+    margin-right: 20px;
+    font-size: 24px;
+  }
+  
+  .profile-pic img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* Search bar */
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  /* Chat list */
+  .chat-list {
+    margin-bottom: 20px;
+  }
+  
+  .chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .chat-details {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+  
+  .chat-name {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .chat-message {
+    color: #777;
+  }
+  
+  .chat-meta {
+    text-align: right;
+  }
+  
+  .chat-time {
+    display: block;
+    color: #777;
+    margin-bottom: 5px;
+  }
+  
+  .unread-count {
+    background-color: purple;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+  }
+  
+  /* Floating action button (FAB) */
+  .fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .fab button {
+    background-color: purple;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  
+  .fab button:hover {
+    background-color: darkpurple;
+  }
+  
