@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const ChatBot = () => {
-  const [messages, setMessages] = useState([{ text: 'Hi! How can I help you today?', sender: 'bot' }]);
+  const [messages, setMessages] = useState([
+    { text: 'Hi! How can I help you today?', sender: 'bot', translated: false }
+  ]);
   const [input, setInput] = useState('');
   const [userLevel, setUserLevel] = useState(3); // User level is now stateful
   const messagesEndRef = useRef(null);
@@ -54,18 +56,54 @@ const ChatBot = () => {
     }
   };
 
+  // Function to call the translation API
+  const handleTranslation = async (botMessage, index) => {
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer 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`
+        },
+        body: JSON.stringify({
+          model: 'llama3-groq-70b-8192-tool-use-preview',
+          messages: [
+            {
+              role: 'user',
+              content: `Translate "${botMessage}" to English`
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch translation');
+      }
+
+      const data = await response.json();
+      const translatedText = data.choices[0].message.content; // Extract the correct translated text
+
+      // Update the message with the translated text
+      setMessages(prevMessages =>
+        prevMessages.map((msg, idx) => (idx === index ? { ...msg, translated: translatedText } : msg))
+      );
+    } catch (error) {
+      console.error('Error fetching translation:', error);
+    }
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     if (!input.trim()) return;
 
     // Add user's message to the messages array
-    setMessages([...messages, { text: input, sender: 'user' }]);
+    setMessages([...messages, { text: input, sender: 'user', translated: false }]);
 
     // Send the user's message, level, and target language to the chatbot API and get the response
     const botResponse = await callChatBotAPI(input);
 
     // Add bot's response to the messages array
-    setMessages(prevMessages => [...prevMessages, { text: botResponse, sender: 'bot' }]);
+    setMessages(prevMessages => [...prevMessages, { text: botResponse, sender: 'bot', translated: false }]);
 
     setInput(''); // Clear the input
   };
@@ -82,6 +120,16 @@ const ChatBot = () => {
               backgroundColor: message.sender === 'user' ? '#DCF8C6' : '#ECECEC'
             }}>
             {message.text}
+
+            {/* Add Translate Button for bot messages except the first one */}
+            {message.sender === 'bot' && !message.translated && index > 0 && (
+              <button style={styles.translateButton} onClick={() => handleTranslation(message.text, index)}>
+                Translate
+              </button>
+            )}
+
+            {/* Show translated text if available */}
+            {message.translated && <div style={styles.translatedMessage}>Translated: {message.translated}</div>}
           </div>
         ))}
         <div ref={messagesEndRef} />
@@ -145,6 +193,20 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer'
+  },
+  translateButton: {
+    marginLeft: '10px',
+    padding: '5px 10px',
+    backgroundColor: '#007bff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer'
+  },
+  translatedMessage: {
+    marginTop: '5px',
+    fontStyle: 'italic',
+    color: '#555'
   }
 };
 
